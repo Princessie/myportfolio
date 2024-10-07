@@ -134,7 +134,7 @@
 
     $('#portfolio-flters li').on('click', function() {
       $("#portfolio-flters li").removeClass('filter-active');
-      $(this).addClass('filter-active');
+      $(this).addClass('filter-active'); 
 
       portfolioIsotope.isotope({
         filter: $(this).data('filter')
@@ -149,3 +149,100 @@
   });
 
 })(jQuery);
+
+
+
+function addEducation() {
+  const educationList = document.getElementById('education-list');
+  const newEntry = document.createElement('div');
+  newEntry.className = 'col-lg-12 icon-box';
+  newEntry.innerHTML = `
+      <h4>
+          New Education Institution 
+          <span class="edit-btn" onclick="editEducation(this)">✏️</span>
+          <span class="delete-btn" onclick="deleteEducation(this)">❌</span>
+      </h4>
+      <h5><em>New Degree</em></h5>
+      <span><em>Start Date - End Date</em></span><br />
+      <span><em>Location</em></span><br />
+  `;
+  educationList.appendChild(newEntry);
+}
+
+function editEducation(element) {
+  const entry = element.parentElement.parentElement;
+  const institution = prompt("Enter institution name:", entry.querySelector('h4').innerText.replace('✏️', '').replace('❌', '').trim());
+  const degree = prompt("Enter degree:", entry.querySelector('h5 em').innerText);
+  const dates = prompt("Enter dates:", entry.querySelector('span').innerText);
+  const location = prompt("Enter location:", entry.querySelectorAll('span')[1].innerText);
+
+  if (institution) entry.querySelector('h4').innerText = institution + ' ';
+  if (degree) entry.querySelector('h5 em').innerText = degree;
+  if (dates) entry.querySelectorAll('span')[0].innerText = dates;
+  if (location) entry.querySelectorAll('span')[1].innerText = location;
+}
+
+function deleteEducation(element) {
+  const entry = element.parentElement.parentElement;
+  if (confirm("Are you sure you want to delete this entry?")) {
+      entry.remove();
+  }
+}
+
+function addSkill() {
+  const skillName = prompt("Enter the skill name:");
+  const skillIcon = prompt("Enter the icon URL:");
+
+  if (skillName && skillIcon) {
+      const skillsList = document.getElementById("skills-list");
+      const newSkillHTML = `
+          <figure class="item" style="display: inline-block">
+              <img src="${skillIcon}" alt="${skillName}" width="40" height="40" />
+              <figcaption style="text-align: center">${skillName}
+                  <span class="edit-btn" onclick="editSkill(this)">✏️</span>
+                  <span class="delete-btn" onclick="deleteSkill(this)">❌</span>
+              </figcaption>
+          </figure>
+          &nbsp; &nbsp;
+      `;
+      skillsList.insertAdjacentHTML('beforeend', newSkillHTML);
+  }
+}
+
+function editSkill(element) {
+  const figcaption = element.closest("figcaption");
+  const skillName = figcaption.childNodes[0].textContent.trim();
+  const newSkillName = prompt("Edit skill name:", skillName);
+  const newIconURL = prompt("Edit icon URL:", element.previousElementSibling.src);
+
+  if (newSkillName) {
+      figcaption.childNodes[0].textContent = newSkillName;
+  }
+  if (newIconURL) {
+      element.previousElementSibling.src = newIconURL;
+  }
+}
+
+function deleteSkill(element) {
+  const skillItem = element.closest("figure.item");
+  skillItem.remove();
+}
+
+
+
+
+    document.getElementById('uploadButton').addEventListener('click', function() {
+        document.getElementById('fileInput').click(); // Trigger the file input click
+    });
+
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profilePreview').src = e.target.result; // Set the image source to the uploaded file
+            };
+            reader.readAsDataURL(file); // Convert the file to a data URL
+        }
+    });
+
